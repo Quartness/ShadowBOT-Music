@@ -4,48 +4,48 @@ const { dequeue, playNextSong, playSong } = require('./play');
 const { queue } = require('./play');
 
 module.exports = {
-  name: 'skip',
-  description: 'Skip the current song',
-  async execute(message, args) {
-    const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) {
-      const embed = new EmbedBuilder()
+  name: 'geç',
+  description: 'Mevcut şarkıyı atla',
+  async execute(mesaj, argümanlar) {
+    const sesKanalı = mesaj.member.voice.channel;
+    if (!sesKanalı) {
+      const gömülü = new EmbedBuilder()
         .setColor('#FF0000')
-        .setDescription('🐼 You need to be in a voice channel to use this command!');
-      return message.reply({ embeds: [embed] });
+        .setDescription('🐼 Bu komutu kullanmak için bir ses kanalında olmanız gerekiyor!');
+      return mesaj.reply({ embeds: [gömülü] });
     }
 
-    const connection = joinVoiceChannel({
-      channelId: voiceChannel.id,
-      guildId: message.guild.id,
-      adapterCreator: message.guild.voiceAdapterCreator,
+    const bağlantı = joinVoiceChannel({
+      channelId: sesKanalı.id,
+      guildId: mesaj.guild.id,
+      adapterCreator: mesaj.guild.voiceAdapterCreator,
     });
 
-    if (connection.state.status === VoiceConnectionStatus.Ready) {
+    if (bağlantı.state.status === VoiceConnectionStatus.Ready) {
       if (queue.length > 0) {
-        const nextSong = dequeue();
-        await playSong(connection, nextSong.searchQuery, nextSong.message);
+        const sonrakiŞarkı = dequeue();
+        await playSong(bağlantı, sonrakiŞarkı.searchQuery, sonrakiŞarkı.message);
 
-        const embed = new EmbedBuilder()
+        const gömülü = new EmbedBuilder()
            .setColor('#2b71ec')
      .setAuthor({
-          name: 'Skipped Song!',
+          name: 'Şarkı Atlandı!',
           iconURL: 'https://cdn.discordapp.com/attachments/1175488636033175602/1175488721253052426/right-chevron-.png?ex=656b6a2e&is=6558f52e&hm=7a73aa51cb35f25eba52055c7b4a1b56bbf3a6d150643adc15b52dc533236956&',
           url: 'https://discord.gg/FUEHs7RCqz'
         })
-          .setDescription('**Let\'s move on to the next beat...**');
-        return message.reply({ embeds: [embed] });
+          .setDescription('**Gelecek melodilere geçiliyor...**');
+        return mesaj.reply({ embeds: [gömülü] });
       } else {
-        const embed = new EmbedBuilder()
+        const gömülü = new EmbedBuilder()
           .setColor('#FFFF00')
-          .setDescription('**❌ No songs in the queue to skip.**');
-        return message.reply({ embeds: [embed] });
+          .setDescription('**❌ Atlamak için sıraya eklenmiş şarkı yok.**');
+        return mesaj.reply({ embeds: [gömülü] });
       }
     } else {
-      const embed = new EmbedBuilder()
+      const gömülü = new EmbedBuilder()
         .setColor('#FF0000')
-        .setDescription('**❌ There is no song to skip. Queue is empty.**');
-      return message.reply({ embeds: [embed] });
+        .setDescription('**❌ Atlamak için şarkı bulunmamaktadır. Kuyruk boş.**');
+      return mesaj.reply({ embeds: [gömülü] });
     }
   },
 };
